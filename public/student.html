@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen text-gray-800">
+
+    <!-- Navbar -->
+    <header class="bg-indigo-600 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold tracking-wide">Hostel Management System</h1>
+            <div class="flex items-center gap-4">
+                <span id="navStudentId" class="text-sm bg-indigo-700 px-3 py-1.5 rounded-lg font-mono font-medium"></span>
+                <button id="logoutBtn" class="bg-indigo-800 hover:bg-indigo-900 px-4 py-1.5 rounded-lg text-sm font-medium transition">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-5xl mx-auto p-6 md:p-10 space-y-8">
+
+        <!-- Welcome Banner -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+                <h2 id="welcomeHeading" class="text-2xl font-bold text-gray-900">Student Profile</h2>
+                <p class="text-sm text-gray-500 mt-1">Manage and view your personal hostel records.</p>
+            </div>
+            <div class="flex gap-3">
+                <a href="/studentbooking.html" class="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 px-4 py-2 rounded-lg text-sm font-semibold transition">
+                    Book Room
+                </a>
+            </div>
+        </div>
+
+        <!-- Student Profile Form Card -->
+        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+            <form id="studentDetailsForm" class="space-y-6">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Roll No</label>
+                        <input id="roll_no" type="text" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                        <input id="first_name" type="text" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Middle Name</label>
+                        <input id="middle_name" type="text" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                        <input id="last_name" type="text" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Department</label>
+                        <input id="department" type="text" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Course Year</label>
+                        <input id="course_year" type="text" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="e.g. 3rd Year" required>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                        <input id="phone" type="tel" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input id="email" type="email" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">DOB</label>
+                        <input id="dob" type="date" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                        <select id="gender" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Age</label>
+                        <input id="age" type="number" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Guardian Name</label>
+                        <input id="guardian_name" type="text" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Guardian Phone</label>
+                        <input id="guardian_phone" type="tel" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+                    </div>
+                </div>
+
+                <div class="pt-4 flex items-center justify-between">
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2.5 rounded-lg shadow-sm transition">
+                        Save Details
+                    </button>
+                    <span id="saveStatus" class="text-sm font-medium"></span>
+                </div>
+            </form>
+        </div>
+
+        <!-- Assigned Hostel / Warden Details Card -->
+        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+            <h3 class="text-lg font-bold text-gray-900 mb-4">Hostel Administration Contact</h3>
+            <div id="adminDetailsBox" class="text-sm text-gray-600">
+                <p>Loading assigned hostel and warden details...</p>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        const studentId = localStorage.getItem("user_id");
+
+        // Protect route: Redirect if no active user session
+        if (!studentId) {
+            window.location.href = "/login.html";
+        }
+
+        document.getElementById("navStudentId").textContent = studentId;
+
+        // Logout handling
+        document.getElementById("logoutBtn").addEventListener("click", () => {
+            localStorage.clear();
+            window.location.href = "/login.html";
+        });
+
+        // Load existing student details on page load
+        async function fetchStudentProfile() {
+            try {
+                const res = await fetch(`/student/${studentId}`);
+                if (!res.ok) {
+                    console.log("No existing student record found yet. Enter details above.");
+                    return;
+                }
+
+                const data = await res.json();
+                if (data.f_name) {
+                    document.getElementById("welcomeHeading").textContent = `Welcome, ${data.f_name} ${data.l_name || ''}`;
+                }
+
+                // Populate form fields matching students database schema
+                document.getElementById("roll_no").value = data.roll_no || "";
+                document.getElementById("first_name").value = data.f_name || "";
+                document.getElementById("middle_name").value = data.m_name || "";
+                document.getElementById("last_name").value = data.l_name || "";
+                document.getElementById("department").value = data.department || "";
+                document.getElementById("course_year").value = data.course_year || "";
+                document.getElementById("phone").value = data.student_phone || "";
+                document.getElementById("email").value = data.student_email_Id || "";
+                
+                if (data.dob) {
+                    const formattedDate = new Date(data.dob).toISOString().split("T")[0];
+                    document.getElementById("dob").value = formattedDate;
+                }
+                
+                if (data.gender) document.getElementById("gender").value = data.gender;
+                document.getElementById("age").value = data.age || "";
+                document.getElementById("guardian_name").value = data.guardian_name || "";
+                document.getElementById("guardian_phone").value = data.guardian_phone || "";
+
+            } catch (err) {
+                console.error("Error fetching student profile:", err);
+            }
+        }
+
+        // Fetch assigned hostel warden / admin details
+        async function fetchAdminDetails() {
+            const adminBox = document.getElementById("adminDetailsBox");
+            try {
+                const res = await fetch(`/student/${studentId}/admin`);
+                if (res.ok) {
+                    const admin = await res.json();
+                    adminBox.innerHTML = `
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div><span class="font-medium text-gray-700">Hostel:</span> ${admin.hostel_name}</div>
+                            <div><span class="font-medium text-gray-700">Warden/Admin:</span> ${admin.admin_name}</div>
+                            <div><span class="font-medium text-gray-700">Contact Email:</span> ${admin.admin_email}</div>
+                            <div><span class="font-medium text-gray-700">Contact Phone:</span> ${admin.admin_phone}</div>
+                        </div>
+                    `;
+                } else {
+                    adminBox.innerHTML = `<p class="text-gray-500">No hostel currently assigned or room not booked yet.</p>`;
+                }
+            } catch (err) {
+                adminBox.innerHTML = `<p class="text-gray-500">Unable to load hostel contact details.</p>`;
+            }
+        }
+
+        // Handle Save Details Form Submission
+        document.getElementById("studentDetailsForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const status = document.getElementById("saveStatus");
+            status.textContent = "Saving...";
+            status.className = "text-sm font-medium text-blue-600";
+
+            const payload = {
+                student_id: studentId,
+                roll_no: document.getElementById("roll_no").value.trim(),
+                first_name: document.getElementById("first_name").value.trim(),
+                middle_name: document.getElementById("middle_name").value.trim(),
+                last_name: document.getElementById("last_name").value.trim(),
+                department: document.getElementById("department").value.trim(),
+                course_year: document.getElementById("course_year").value.trim(),
+                phone: document.getElementById("phone").value.trim(),
+                email: document.getElementById("email").value.trim(),
+                dob: document.getElementById("dob").value,
+                gender: document.getElementById("gender").value,
+                age: document.getElementById("age").value.trim(),
+                guardian_name: document.getElementById("guardian_name").value.trim(),
+                guardian_phone: document.getElementById("guardian_phone").value.trim()
+            };
+
+            try {
+                const res = await fetch("/student/save", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    status.textContent = "✅ Details saved successfully!";
+                    status.className = "text-sm font-medium text-green-600";
+                    document.getElementById("welcomeHeading").textContent = `Welcome, ${payload.first_name} ${payload.last_name}`;
+                } else {
+                    status.textContent = "❌ " + (data.message || "Failed to save details.");
+                    status.className = "text-sm font-medium text-red-600";
+                }
+            } catch (err) {
+                console.error("Error saving student data:", err);
+                status.textContent = "❌ Network/server error.";
+                status.className = "text-sm font-medium text-red-600";
+            }
+        });
+
+        // Initialize data fetching
+        fetchStudentProfile();
+        fetchAdminDetails();
+    </script>
+</body>
+</html>

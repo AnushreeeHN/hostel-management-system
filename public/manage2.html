@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - Manage Hostels & Rooms</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center py-10">
+
+  <h1 class="text-4xl font-bold text-blue-600 mb-8">🏠 Admin Hostel Management</h1>
+
+  <div id="dataContainer" class="w-11/12 max-w-6xl bg-white shadow-md rounded-xl p-6">
+
+    <div id="hostelContainer" class="space-y-8"></div>
+  </div>
+
+  <script>
+    const admin_id = localStorage.getItem("user_id");
+
+    if (!admin_id) {
+      alert("⚠️ No admin logged in. Please log in first.");
+      window.location.href = "/login.html";
+    }
+
+    async function fetchData() {
+      try {
+        const res = await fetch(`/admin/data/${admin_id}`);
+        const data = await res.json();
+
+        if (!data.success) {
+          alert("❌ Error: " + data.message);
+          return;
+        }
+
+        const container = document.getElementById("hostelContainer");
+        container.innerHTML = "";
+
+        data.hostels.forEach(hostel => {
+          const hostelCard = document.createElement("div");
+          hostelCard.className = "border border-gray-300 rounded-xl shadow-sm p-4";
+
+          hostelCard.innerHTML = `
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-2xl font-semibold text-gray-800">${hostel.hostel_name}</h2>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-lg font-medium mb-2 text-gray-700">Rooms:</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                ${hostel.rooms.map(room => `
+                  <div class="border border-gray-200 rounded-lg p-3 shadow-sm">
+                    <p><strong>Room:</strong> ${room.room_id}</p>
+                    <p><strong>Type:</strong> ${room.room_type}</p>
+                    <p><strong>Status:</strong> <span class="${room.status === 'available' ? 'text-green-600' : 'text-red-600'}">${room.status}</span></p>
+                  </div>
+                `).join("")}
+              </div>
+
+              <h3 class="text-lg font-medium mt-4 mb-2 text-gray-700">Payments:</h3>
+              <table class="w-full border border-gray-200 text-sm">
+                <thead class="bg-gray-100">
+                  <tr>
+                    <th class="border px-2 py-1">Student</th>
+                    <th class="border px-2 py-1">Amount</th>
+                    <th class="border px-2 py-1">Status</th>
+                    <th class="border px-2 py-1">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${hostel.payments.map(p => `
+                    <tr>
+                      <td class="border px-2 py-1">${p.student_id}</td>
+                      <td class="border px-2 py-1">₹${p.amount}</td>
+                      <td class="border px-2 py-1 ${p.status === 'paid' ? 'text-green-600' : 'text-red-600'}">${p.status}</td>
+                      <td class="border px-2 py-1">${p.payment_date || '-'}</td>
+                    </tr>
+                  `).join("")}
+                </tbody>
+              </table>
+            </div>
+          `;
+
+          container.appendChild(hostelCard);
+        });
+      } catch (err) {
+        alert("⚠️ Failed to load data: " + err.message);
+      }
+    }
+
+    fetchData();
+  </script>
+</body>
+</html>

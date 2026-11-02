@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Hostels</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-blue-100 via-green-100 to-blue-200 min-h-screen flex flex-col items-center py-10">
+
+  <!-- Header -->
+  <h1 class="text-4xl font-extrabold mb-10 text-blue-800 drop-shadow-md">
+    🏠 Your Managed Hostels
+  </h1>
+
+  <!-- Hostel Cards Container -->
+  <div id="hostelList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-11/12 max-w-7xl">
+    <!-- Cards will appear here -->
+  </div>
+
+  <script>
+    // ✅ Get current logged-in admin
+    const loggedUser = JSON.parse(localStorage.getItem("user"));
+
+    if (!loggedUser || loggedUser.role !== "admin") {
+      document.body.innerHTML = `
+        <div class="text-center mt-20">
+          <p class="text-red-600 text-2xl font-semibold">⚠️ You must log in as an admin to view this page.</p>
+        </div>`;
+    } else {
+      loadHostels(loggedUser.user_id);
+    }
+
+    // ✅ Fetch and display hostels
+    async function loadHostels(userId) {
+      try {
+        const res = await fetch(`http://localhost:5000/admin/hostels/${userId}`);
+        if (!res.ok) throw new Error("Failed to fetch hostels");
+
+        const hostels = await res.json();
+        const container = document.getElementById("hostelList");
+        container.innerHTML = "";
+
+        if (hostels.length === 0) {
+          container.innerHTML = `
+            <p class="text-gray-700 text-lg text-center col-span-full bg-white/60 p-5 rounded-xl shadow">
+              No hostels found for this admin.
+            </p>`;
+          return;
+        }
+
+        hostels.forEach(h => {
+          const card = document.createElement("div");
+          card.className = `
+            bg-white/70 backdrop-blur-md border border-blue-200 
+            p-6 rounded-2xl shadow-md hover:shadow-2xl 
+            hover:-translate-y-1 transition-all duration-300 cursor-pointer
+          `;
+          card.innerHTML = `
+            <div class="flex items-center justify-between mb-3">
+              <h2 class="text-2xl font-semibold text-blue-700">${h.hostel_name}</h2>
+              <span class="text-sm text-gray-500 bg-blue-100 px-3 py-1 rounded-full">
+                ID: ${h.hostel_id}
+              </span>
+            </div>
+
+            <div class="space-y-2 text-gray-700">
+              <p>📍 <strong>Address:</strong> ${h.address}</p>
+              <p>🛏️ <strong>Total Rooms:</strong> ${h.total_rooms}</p>
+              
+            </div>
+
+            <button class="mt-5 w-full bg-blue-500 text-white py-2 rounded-xl hover:bg-blue-600 transition-all">
+              Manage Hostel
+            </button>
+          `;
+          container.appendChild(card);
+        });
+
+      } catch (err) {
+        console.error(err);
+        document.getElementById("hostelList").innerHTML = `
+          <p class="text-red-600 text-lg col-span-full bg-white/70 p-4 rounded-xl shadow">
+            ⚠️ Error loading hostels: ${err.message}
+          </p>`;
+      }
+    }
+  </script>
+</body>
+</html>

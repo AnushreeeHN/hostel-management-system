@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hostel Room Booking</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#F7F8FA] min-h-screen flex flex-col items-center py-10">
+
+  <h1 class="text-4xl font-bold mb-8 text-blue-800 tracking-wide">🏠 Hostel Room Booking</h1>
+
+  <button id="loadRooms" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-lg shadow-md transition-all">
+    Show Available Hostels & Rooms
+  </button>
+
+  <div id="roomsContainer" class="mt-10 w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4"></div>
+
+  <script>
+    // Simulate logged-in student
+    if (!localStorage.getItem('user_id')) {
+      localStorage.setItem('user_id', 'UV25');
+    }
+
+    const userId = localStorage.getItem('user_id');
+
+    document.getElementById('loadRooms').addEventListener('click', () => {
+      fetch(`http://localhost:5000/api/rooms?user_id=${userId}`)
+        .then(res => {
+          if (!res.ok) throw new Error("Network error");
+          return res.json();
+        })
+        .then(data => {
+          const container = document.getElementById('roomsContainer');
+          container.innerHTML = '';
+
+          if (!data || data.length === 0) {
+            container.innerHTML = `<p class="text-gray-600 text-center col-span-full">No hostels or rooms found.</p>`;
+            return;
+          }
+
+          // Group rooms by hostel
+          const hostels = {};
+          data.forEach(room => {
+            if (!hostels[room.hostel_name]) hostels[room.hostel_name] = [];
+            hostels[room.hostel_name].push(room);
+          });
+
+          // Create cards for each hostel
+          Object.keys(hostels).forEach(hostelName => {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-xl shadow-lg border border-gray-200 p-5 hover:shadow-2xl transition-all duration-200';
+
+            let tableRows = hostels[hostelName].map(room => {
+              const occupied = room.booking_status === 'booked';
+              const statusColor = occupied
+                ? 'text-green-600'
+                : room.status === 'available'
+                ? 'text-blue-600'
+                : 'text-red-600';
+
+              return `
+                <tr class="border-t border-gray-100 hover:bg-gray-50">
+                  <td class="py-2 px-2 text-gray-800">${room.room_id}</td>
+                  <td class="py-2 px-2 text-gray-600">${room.room_type}</td>
+                  <td class="py-2 px-2 font-semibold ${statusColor}">
+                    ${occupied ? 'You booked this room' : room.status}
+                  </td>
+                  <td class="py-2 px-2 text-gray-700">₹${room.rent}</td>
+                  <td class="py-2 px-2">
+                    ${
+                      occupied
+                        ? `<button class="bg-gray-400 text-white px-3 py-1 rounded-md text-sm cursor-not-allowed">Booked</button>`
+                        : `<button class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-md text-sm"
+                            onclick="bookRoom(${room.room_id})">Book</button>`
+                    }
+                  </td>
+                </tr>
+              `;
+            }).join('');
+
+            card.innerHTML = `
+              <h2 class="text-2xl font-semibold text-blue-700 mb-4 border-b pb-2">${hostelName}</h2>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left border-collapse">
+                  <thead class="bg-blue-100">
+                    <tr>
+                      <th class="py-2 px-2 text-gray-700">Room No</th>
+                      <th class="py-2 px-2 text-gray-700">Type</th>
+                      <th class="py-2 px-2 text-gray-700">Status</th>
+                      <th class="py-2 px-2 text-gray-700">Rent</th>
+                      <th class="py-2 px-2 text-gray-700">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${tableRows}
+                  </tbody>
+                </table>
+              </div>
+            `;
+
+            container.appendChild(card);
+          });
+        })
+        .catch(err => {
+          console.error('Error loading room:', err);
+          alert("Error loading rooms. Please check your server connection.");
+        });
+    });
+
+    // Booking logic
+    function bookRoom(roomId) {
+      if (!confirm("Are you sure you want to book this room?")) return;
+
+      fetch('http://localhost:5000/api/book-room', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          room_id: roomId,
+          student_id: localStorage.getItem('user_id')
+        })
+      })
+        .then(res => res.json())
+        .then(data => {
+          alert(data.message);
+          document.getElementById('loadRooms').click(); // refresh room list
+        })
+        .catch(err => {
+          console.error('Booking error:', err);
+          alert("Error booking room. Please try again.");
+        });
+    }
+  </script>
+</body>
+</html>
